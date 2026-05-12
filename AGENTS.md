@@ -162,4 +162,3 @@ Find irrelevant search terms from the last 30 days. Draft negative keyword chang
 3. User completed NotFair OAuth at `https://notfair.co/connect`.
 4. Google account has access to the target Ads customer.
 5. Client has reloaded or restarted MCP servers.
-6. New installs are not using the legacy endpoint.

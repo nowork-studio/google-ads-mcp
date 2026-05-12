@@ -162,20 +162,6 @@ Rules to follow:
 | OAuth opens but setup does not finish | Remove the connector, add it again, then retry the OAuth flow. |
 | The agent wants to make a change too quickly | Ask it to run read-only diagnosis first and show the proposed diff before writing. |
 
-## Legacy endpoint
-
-Existing NotFair installs may still use:
-
-```text
-https://notfair.co/api/mcp
-```
-
-New installs should use:
-
-```text
-https://notfair.co/api/mcp/google_ads
-```
-
 ## Links
 
 - NotFair: https://notfair.co/
