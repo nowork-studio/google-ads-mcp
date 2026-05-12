@@ -8,46 +8,50 @@ Find what's wrong. Fix it from your AI agent.
 
 NotFair connects Claude, OpenAI Codex, Cursor, Cline, OpenClaw, Hermes, and other MCP-compatible agents to live Google Ads data. Your agent can diagnose account issues, draft fixes, and execute campaign changes only after you approve.
 
-> This repo is the public setup guide for NotFair's hosted Google Ads MCP. You do not need to clone this repo or run a local server.
+> This repo is the public setup guide for NotFair's hosted Google Ads MCP. You do not need to clone this repo, create Google API credentials, or run a local server.
 
-## Copy these values
+## Claude setup
 
-| Field | Value |
-| --- | --- |
-| Website | `https://notfair.co/` |
-| Connect Google Ads | `https://notfair.co/connect` |
-| MCP server URL | `https://notfair.co/api/mcp/google_ads` |
-| Connector name | `NotFair-GoogleAds` |
+For Claude users, setup is just one URL:
 
-## 60-second setup
+```text
+https://notfair.co/api/mcp/google_ads
+```
 
-1. Connect Google Ads at `https://notfair.co/connect`.
-2. Add the MCP server URL to your AI client.
-3. Ask a read-only question first, such as: `Audit my Google Ads account and rank fixes by impact.`
-4. Review proposed changes before approving any write.
+1. Open Claude settings.
+2. Go to Connectors.
+3. Add a custom connector.
+4. Paste `https://notfair.co/api/mcp/google_ads`.
+5. If Claude asks for a name, use `NotFair-GoogleAds`.
+6. Claude will open the NotFair OAuth flow.
+7. Sign in with the Google account that has Google Ads access.
+8. Start a new Claude chat and ask your first question.
+
+You do not need to create a Google Ads developer token, OAuth app, API key, or local MCP server.
+
+First prompt:
+
+```text
+Audit my Google Ads account and rank the highest-impact fixes. Pull live data before making recommendations.
+```
 
 ```mermaid
 flowchart LR
-  A[You] --> B[Claude / Codex / Cursor / OpenClaw / Hermes]
-  B --> C[NotFair Google Ads MCP]
-  C --> D[Google Ads]
-  D --> C
-  C --> B
-  B --> E[Diagnosis, fix draft, approval request]
-  E --> A
+  A[You paste the NotFair MCP URL] --> B[Claude]
+  B --> C[NotFair OAuth]
+  C --> D[Google Ads account access]
+  D --> B
+  B --> E[Live audit, fix draft, approval request]
+  E --> F[You approve writes]
 ```
 
-## Choose your client
+## Other clients
 
-| Client | Easiest setup | What to paste |
-| --- | --- | --- |
-| OpenAI Codex | One terminal command | `codex mcp add NotFair-GoogleAds --url https://notfair.co/api/mcp/google_ads` |
-| Claude.ai / Desktop / Cowork | Add custom connector | Name `NotFair-GoogleAds`, URL `https://notfair.co/api/mcp/google_ads` |
-| Cursor | Add MCP server in settings | JSON config below |
-| Cline | Add MCP server in settings | JSON config below |
-| OpenClaw | Add remote MCP server or ask the agent to connect | JSON config or setup prompt below |
-| Hermes | Add remote MCP server or ask the agent to connect | JSON config or setup prompt below |
-| Any MCP client | Remote MCP config | JSON config below |
+Codex, Cursor, Cline, OpenClaw, Hermes, and other MCP clients use the same hosted server URL:
+
+```text
+https://notfair.co/api/mcp/google_ads
+```
 
 ## OpenAI Codex
 
@@ -57,30 +61,7 @@ Run:
 codex mcp add NotFair-GoogleAds --url https://notfair.co/api/mcp/google_ads
 ```
 
-Then follow the browser sign-in flow. Use the Google account that has access to the target Google Ads account.
-
-First prompt:
-
-```text
-Audit my Google Ads account and rank the highest-impact fixes. Pull live data before making recommendations.
-```
-
-## Claude.ai, Claude Desktop, and Claude Cowork
-
-1. Open Claude settings.
-2. Go to Connectors.
-3. Add a custom connector.
-4. Name it `NotFair-GoogleAds`.
-5. Set the remote MCP server URL to `https://notfair.co/api/mcp/google_ads`.
-6. Click Add.
-7. Complete the NotFair and Google OAuth flow.
-8. Open a new chat and ask a read-only question first.
-
-First prompt:
-
-```text
-Why did leads get more expensive this week? Diagnose the cause and show the evidence before suggesting fixes.
-```
+Then follow the browser sign-in flow.
 
 ## Cursor, Cline, OpenClaw, Hermes, and other MCP clients
 
@@ -99,10 +80,25 @@ Use this MCP server config anywhere your client accepts MCP JSON:
 If your agent can set up MCP servers from a prompt, use:
 
 ```text
-Connect to the NotFair Google Ads MCP. Use connector name NotFair-GoogleAds and remote MCP server URL https://notfair.co/api/mcp/google_ads. After connecting, run a read-only Google Ads audit and wait for my approval before making any changes.
+Connect to the NotFair Google Ads MCP at https://notfair.co/api/mcp/google_ads. Use OAuth if available. Start with a read-only Google Ads audit and wait for my approval before making any changes.
 ```
 
-If your client does not support remote MCP OAuth, generate or reconnect through NotFair and configure a secure bearer-token header:
+## How it works
+
+```mermaid
+flowchart LR
+  A[You] --> B[Claude / Codex / Cursor / OpenClaw / Hermes]
+  B --> C[NotFair Google Ads MCP]
+  C --> D[Google Ads]
+  D --> C
+  C --> B
+  B --> E[Diagnosis, fix draft, approval request]
+  E --> A
+```
+
+## Advanced fallback
+
+Most users should use OAuth. If your MCP client does not support remote MCP OAuth, generate or reconnect through NotFair and configure a secure bearer-token header:
 
 ```text
 Authorization: Bearer YOUR_NOTFAIR_TOKEN
@@ -205,4 +201,3 @@ This repository is open source under the [MIT License](LICENSE).
 ## Support
 
 For setup help, contact `tong@notfair.co`.
-

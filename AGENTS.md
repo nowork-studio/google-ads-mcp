@@ -4,18 +4,17 @@ Instructions for AI agents and MCP clients using the NotFair Google Ads MCP.
 
 This repository documents a hosted remote MCP server. Do not try to run a local Google Ads MCP server from this repo.
 
-## Canonical values
+## Canonical setup
 
-| Field | Value |
-| --- | --- |
-| Product | NotFair Google Ads MCP |
-| Website | `https://notfair.co/` |
-| Connect URL | `https://notfair.co/connect` |
-| Remote MCP URL | `https://notfair.co/api/mcp/google_ads` |
-| Connector name | `NotFair-GoogleAds` |
-| Legacy endpoint | `https://notfair.co/api/mcp` |
+For Claude and any OAuth-capable MCP client, the user should only need this remote MCP URL:
 
-Use `https://notfair.co/api/mcp/google_ads` for every new install.
+```text
+https://notfair.co/api/mcp/google_ads
+```
+
+Claude will prompt the user through NotFair OAuth automatically. Do not send Claude users to a separate manual setup flow unless OAuth fails.
+
+Use connector name `NotFair-GoogleAds` only when the client asks for a name.
 
 ## Agent operating rules
 
@@ -89,10 +88,10 @@ Audit my connected Google Ads account. Rank the top fixes by spend at risk, evid
 
 Use Claude's custom connector flow:
 
-- Name: `NotFair-GoogleAds`
-- Remote MCP server URL: `https://notfair.co/api/mcp/google_ads`
+- Paste remote MCP server URL: `https://notfair.co/api/mcp/google_ads`
+- If Claude asks for a name, use `NotFair-GoogleAds`
 
-After OAuth completes, open a fresh chat and start with a read-only diagnosis.
+Claude should open the NotFair OAuth flow automatically. After OAuth completes, open a fresh chat and start with a read-only diagnosis.
 
 ## Claude Code
 
@@ -164,4 +163,3 @@ Find irrelevant search terms from the last 30 days. Draft negative keyword chang
 4. Google account has access to the target Ads customer.
 5. Client has reloaded or restarted MCP servers.
 6. New installs are not using the legacy endpoint.
-
