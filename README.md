@@ -24,7 +24,7 @@ https://notfair.co/api/mcp/google_ads
 4. Paste `https://notfair.co/api/mcp/google_ads`.
 5. If Claude asks for a name, use `NotFair-GoogleAds`.
 6. Start a new Claude chat and ask your first Google Ads question.
-7. When Claude needs account access, it will prompt you through the NotFair OAuth flow.
+7. Claude will prompt you to authorize NotFair inside that chat conversation.
 8. Sign in with the Google account that has Google Ads access.
 
 You do not need to create a Google Ads developer token, OAuth app, API key, or local MCP server.
@@ -40,7 +40,7 @@ flowchart LR
   A[You paste the NotFair MCP URL] --> B[Claude]
   B --> C[Start a new chat]
   C --> D[Ask a Google Ads question]
-  D --> E[NotFair OAuth prompt]
+  D --> E[OAuth prompt appears in chat]
   E --> F[Google Ads account access]
   F --> G[Live answer, fix draft, approval request]
 ```

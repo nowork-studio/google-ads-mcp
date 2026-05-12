@@ -12,7 +12,7 @@ For Claude and any OAuth-capable MCP client, the user should only need this remo
 https://notfair.co/api/mcp/google_ads
 ```
 
-After the connector is added, the user can start a new Claude chat and ask a Google Ads question. Claude should prompt the user through NotFair OAuth when it needs account access. Do not tell Claude users OAuth necessarily opens immediately after adding the connector.
+After the connector is added, the user can start a new Claude chat and ask a Google Ads question. Claude should prompt the user through NotFair OAuth inside that chat conversation when it needs account access. Do not tell Claude users OAuth opens immediately after adding the connector.
 
 Use connector name `NotFair-GoogleAds` only when the client asks for a name.
 
@@ -91,7 +91,7 @@ Use Claude's custom connector flow:
 - Paste remote MCP server URL: `https://notfair.co/api/mcp/google_ads`
 - If Claude asks for a name, use `NotFair-GoogleAds`
 
-After adding the connector, the user should open a fresh chat and ask a Google Ads question. Claude should prompt for NotFair OAuth when it needs account access.
+After adding the connector, the user should open a fresh chat and ask a Google Ads question. Claude should prompt for NotFair OAuth inside that chat conversation when it needs account access.
 
 ## Claude Code
 
