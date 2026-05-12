@@ -96,16 +96,6 @@ flowchart LR
   E --> A
 ```
 
-## Advanced fallback
-
-Most users should use OAuth. If your MCP client does not support remote MCP OAuth, generate or reconnect through NotFair and configure a secure bearer-token header:
-
-```text
-Authorization: Bearer YOUR_NOTFAIR_TOKEN
-```
-
-Do not paste bearer tokens into prompts, chats, screenshots, README files, or committed config.
-
 ## What users can ask
 
 Use business-language prompts. You do not need to know Google Ads internals before starting.
