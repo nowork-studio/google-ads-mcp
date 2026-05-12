@@ -1,37 +1,43 @@
 # AGENTS.md
 
-Instructions for AI agents and MCP clients working with the NotFair Google Ads MCP.
+Instructions for AI agents and MCP clients using the NotFair Google Ads MCP.
 
-This repository is documentation for a hosted remote MCP server. Do not try to run a local Google Ads MCP server from this repo.
+This repository documents a hosted remote MCP server. Do not try to run a local Google Ads MCP server from this repo.
 
-## Canonical connection values
+## Canonical values
 
-- Product: NotFair Google Ads MCP
-- Website: `https://notfair.co/`
-- Connect URL: `https://notfair.co/connect`
-- Remote MCP URL: `https://notfair.co/api/mcp/google_ads`
-- Connector name: `NotFair-GoogleAds`
-- Legacy endpoint: `https://notfair.co/api/mcp`
+| Field | Value |
+| --- | --- |
+| Product | NotFair Google Ads MCP |
+| Website | `https://notfair.co/` |
+| Connect URL | `https://notfair.co/connect` |
+| Remote MCP URL | `https://notfair.co/api/mcp/google_ads` |
+| Connector name | `NotFair-GoogleAds` |
+| Legacy endpoint | `https://notfair.co/api/mcp` |
 
-Use the platform-specific endpoint for all new installs:
+Use `https://notfair.co/api/mcp/google_ads` for every new install.
 
-```text
-https://notfair.co/api/mcp/google_ads
-```
-
-## General agent behavior
+## Agent operating rules
 
 - Treat NotFair as the hosted OAuth and Google Ads API bridge.
-- Prefer OAuth when the MCP client supports remote MCP OAuth.
-- If bearer-token auth is required, tell the user to generate or reconnect through NotFair and configure `Authorization: Bearer <token>`.
-- Start with read-only diagnostics before suggesting account changes.
-- Before any write action, show the proposed change, explain expected impact, and wait for explicit user approval.
-- Never claim a Google Ads change was applied unless the MCP tool result confirms it.
-- If auth fails, ask the user to reconnect at `https://notfair.co/connect`.
+- Prefer remote MCP OAuth when the client supports it.
+- If bearer-token auth is required, store the token only in the client's secure secret/header config.
+- Never ask the user to paste tokens into a chat.
+- Start with read-only diagnosis.
+- Before a write, show the exact proposed change, expected impact, risk, and rollback path.
+- Wait for explicit user approval before applying changes.
+- Never claim a Google Ads change landed unless the MCP tool result confirms it.
+- If auth fails, tell the user to reconnect at `https://notfair.co/connect`.
 
 ## OpenClaw
 
-Add the NotFair Google Ads MCP as a remote MCP server using the canonical URL:
+Recommended setup prompt:
+
+```text
+Connect to the NotFair Google Ads MCP. Use connector name NotFair-GoogleAds and remote MCP server URL https://notfair.co/api/mcp/google_ads. After connecting, run a read-only Google Ads audit and wait for my approval before making any changes.
+```
+
+Config shape if editing MCP JSON directly:
 
 ```json
 {
@@ -43,11 +49,17 @@ Add the NotFair Google Ads MCP as a remote MCP server using the canonical URL:
 }
 ```
 
-After connecting, verify tool discovery before making Google Ads requests. If the server returns an auth challenge, complete the NotFair OAuth flow.
+After connecting, verify tool discovery before making requests.
 
 ## Hermes
 
-Configure Hermes as a remote MCP client with:
+Recommended setup prompt:
+
+```text
+Add the NotFair Google Ads MCP as a remote MCP server named NotFair-GoogleAds at https://notfair.co/api/mcp/google_ads. Use OAuth if available. Start with read-only diagnosis and require approval before writes.
+```
+
+Config shape:
 
 ```json
 {
@@ -59,20 +71,18 @@ Configure Hermes as a remote MCP client with:
 }
 ```
 
-If Hermes requires explicit headers instead of OAuth, provide a NotFair bearer token through its secure secret/header configuration. Do not paste tokens into prompts or committed files.
-
 ## OpenAI Codex
 
-Install with:
+Install:
 
 ```bash
 codex mcp add NotFair-GoogleAds --url https://notfair.co/api/mcp/google_ads
 ```
 
-Then start with:
+First prompt:
 
 ```text
-Audit my Google Ads account and rank the highest-impact fixes.
+Audit my connected Google Ads account. Rank the top fixes by spend at risk, evidence strength, and expected impact.
 ```
 
 ## Claude.ai, Claude Desktop, and Claude Cowork
@@ -82,11 +92,11 @@ Use Claude's custom connector flow:
 - Name: `NotFair-GoogleAds`
 - Remote MCP server URL: `https://notfair.co/api/mcp/google_ads`
 
-After OAuth completes, open a new chat and ask a read-only question first.
+After OAuth completes, open a fresh chat and start with a read-only diagnosis.
 
 ## Claude Code
 
-If using remote MCP configuration directly, use:
+If using remote MCP config directly:
 
 ```json
 {
@@ -98,11 +108,11 @@ If using remote MCP configuration directly, use:
 }
 ```
 
-If using a plugin marketplace flow, follow NotFair's current Claude Code instructions from `https://notfair.co/` and verify the plugin points to the same server URL.
+If using a plugin marketplace flow, verify the plugin points to the same server URL.
 
 ## Cursor
 
-Add the remote MCP server to Cursor's MCP configuration:
+Add this to Cursor's MCP configuration:
 
 ```json
 {
@@ -114,11 +124,11 @@ Add the remote MCP server to Cursor's MCP configuration:
 }
 ```
 
-Restart or reload Cursor's MCP servers after editing the config.
+Reload Cursor's MCP servers after editing config.
 
-## Cline and other MCP clients
+## Cline
 
-Use the same remote MCP JSON shape when supported:
+Add the same remote MCP JSON config in Cline's MCP settings:
 
 ```json
 {
@@ -130,29 +140,28 @@ Use the same remote MCP JSON shape when supported:
 }
 ```
 
-If the client does not support remote MCP OAuth, use a bearer token stored in the client's secure secret/header mechanism.
+Use OAuth when available. If using bearer auth, keep the token in Cline's secret/header mechanism.
 
-## Recommended first prompts
+## Good default first prompts
 
 ```text
-Audit my Google Ads account. Rank issues by wasted spend, likely impact, and confidence.
+Find what's wrong with my Google Ads account. Rank issues by wasted spend, confidence, and likely impact.
 ```
 
 ```text
-Find irrelevant search terms that should become negative keywords. Show the proposed changes and wait for approval.
+Why did CPA change this week compared with last week? Pull live data and show the drivers.
 ```
 
 ```text
-Explain why conversions or CPA changed this week compared with last week.
+Find irrelevant search terms from the last 30 days. Draft negative keyword changes and wait for approval.
 ```
 
-## Troubleshooting invariant
+## Setup failure checklist
 
-When setup fails, verify these in order:
-
-1. The client is using `https://notfair.co/api/mcp/google_ads`.
-2. The user completed NotFair OAuth at `https://notfair.co/connect`.
-3. The Google account has access to the target Google Ads customer.
-4. The MCP client refreshed or reloaded after adding the server.
-5. The agent is not using the legacy endpoint for a new install.
+1. Server URL is exactly `https://notfair.co/api/mcp/google_ads`.
+2. Connector name is `NotFair-GoogleAds`.
+3. User completed NotFair OAuth at `https://notfair.co/connect`.
+4. Google account has access to the target Ads customer.
+5. Client has reloaded or restarted MCP servers.
+6. New installs are not using the legacy endpoint.
 
